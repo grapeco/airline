@@ -330,7 +330,7 @@ async fn book_menu(pool: &PgPool) {
     }
 
     let seat_id = ask_i32("\nID места: ");
-    let price = ask_f64("Цена: ");
+    let price: f64 = 8500.0;
 
     println!("\n--- Пассажир ---");
     let p = NewPassenger {
