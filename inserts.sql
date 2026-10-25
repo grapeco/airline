@@ -1,0 +1,343 @@
+TRUNCATE payments, tickets, seats, flights, crew_assignments, 
+         crew, aircraft, airlines, airports, passengers RESTART IDENTITY CASCADE;
+
+-- =========================================================
+-- 1. AIRLINES
+-- =========================================================
+INSERT INTO airlines (name, iata_code, country) VALUES
+('Aeroflot','SU','Russia'), ('S7 Airlines','S7','Russia'), ('Ural Airlines','U6','Russia'),
+('Rossiya Airlines','FV','Russia'), ('Pobeda','DP','Russia'), ('UTair','UT','Russia'),
+('Nordwind Airlines','N4','Russia'), ('Azur Air','ZF','Russia'), ('Red Wings Airlines','WZ','Russia'),
+('Yamal Airlines','YC','Russia'), ('Lufthansa','LH','Germany'), ('British Airways','BA','United Kingdom'),
+('Air France','AF','France'), ('KLM','KL','Netherlands'), ('Ryanair','FR','Ireland'),
+('easyJet','U2','United Kingdom'), ('Wizz Air','W6','Hungary'), ('Turkish Airlines','TK','Turkey'),
+('Emirates','EK','United Arab Emirates'), ('Qatar Airways','QR','Qatar'), ('Etihad Airways','EY','United Arab Emirates'),
+('Singapore Airlines','SQ','Singapore'), ('Cathay Pacific','CX','Hong Kong'), ('Japan Airlines','JL','Japan'),
+('ANA','NH','Japan'), ('Korean Air','KE','South Korea'), ('Asiana Airlines','OZ','South Korea'),
+('Air China','CA','China'), ('China Eastern','MU','China'), ('China Southern','CZ','China'),
+('Qantas','QF','Australia'), ('Air New Zealand','NZ','New Zealand'), ('Air Canada','AC','Canada'),
+('United Airlines','UA','United States'), ('Delta Air Lines','DL','United States'), ('American Airlines','AA','United States'),
+('Southwest Airlines','WN','United States'), ('JetBlue','B6','United States'), ('Alaska Airlines','AS','United States'),
+('Aeromexico','AM','Mexico'), ('LATAM Airlines','LA','Chile'), ('Avianca','AV','Colombia'),
+('Copa Airlines','CM','Panama'), ('Iberia','IB','Spain'), ('Vueling','VY','Spain'),
+('ITA Airways','AZ','Italy'), ('Swiss','LX','Switzerland'), ('Austrian Airlines','OS','Austria'),
+('SAS','SK','Sweden'), ('Norwegian','DY','Norway'), ('Finnair','AY','Finland'),
+('LOT Polish Airlines','LO','Poland'), ('Czech Airlines','OK','Czechia'), ('Aegean Airlines','A3','Greece'),
+('TAP Air Portugal','TP','Portugal'), ('Brussels Airlines','SN','Belgium'), ('Aer Lingus','EI','Ireland'),
+('Icelandair','FI','Iceland'), ('Wideroe','WF','Norway'), ('airBaltic','BT','Latvia'),
+('Smartwings','QS','Czechia'), ('SunExpress','XQ','Turkey'), ('Pegasus Airlines','PC','Turkey'),
+('Royal Air Maroc','AT','Morocco'), ('EgyptAir','MS','Egypt'), ('Ethiopian Airlines','ET','Ethiopia'),
+('Kenya Airways','KQ','Kenya'), ('South African Airways','SA','South Africa'), ('Royal Jordanian','RJ','Jordan'),
+('El Al','LY','Israel'), ('Gulf Air','GF','Bahrain'), ('Kuwait Airways','KU','Kuwait'),
+('Oman Air','WY','Oman'), ('Saudia','SV','Saudi Arabia'), ('Pakistan International','PK','Pakistan'),
+('Air India','AI','India'), ('IndiGo','6E','India'), ('SpiceJet','SG','India'),
+('Vistara','UK','India'), ('Biman Bangladesh','BG','Bangladesh'), ('SriLankan Airlines','UL','Sri Lanka'),
+('Thai Airways','TG','Thailand'), ('Vietnam Airlines','VN','Vietnam'), ('Malaysia Airlines','MH','Malaysia'),
+('Garuda Indonesia','GA','Indonesia'), ('Philippine Airlines','PR','Philippines'), ('Cebu Pacific','5J','Philippines'),
+('China Airlines','CI','Taiwan'), ('EVA Air','BR','Taiwan'), ('Hong Kong Airlines','HX','Hong Kong'),
+('AirAsia','AK','Malaysia'), ('Scoot','TR','Singapore'), ('Jetstar','JQ','Australia'),
+('Virgin Australia','VA','Australia'), ('Hawaiian Airlines','HA','United States'), ('WestJet','WS','Canada'),
+('Air Transat','TS','Canada'), ('Sunwing Airlines','WG','Canada'), ('Breeze Airways','MX','United States'),
+('Air Serbia','JU','Serbia');
+
+-- =========================================================
+-- 2. AIRPORTS
+-- =========================================================
+INSERT INTO airports (iata_code, name, city, country, timezone) VALUES
+('SVO','Sheremetyevo','Moscow','Russia','Europe/Moscow'), ('DME','Domodedovo','Moscow','Russia','Europe/Moscow'),
+('VKO','Vnukovo','Moscow','Russia','Europe/Moscow'), ('LED','Pulkovo','Saint Petersburg','Russia','Europe/Moscow'),
+('KZN','Kazan','Kazan','Russia','Europe/Moscow'), ('AER','Sochi','Sochi','Russia','Europe/Moscow'),
+('OVB','Tolmachevo','Novosibirsk','Russia','Asia/Novosibirsk'), ('KJA','Yemelyanovo','Krasnoyarsk','Russia','Asia/Krasnoyarsk'),
+('SVX','Koltsovo','Yekaterinburg','Russia','Asia/Yekaterinburg'), ('UFA','Ufa','Ufa','Russia','Asia/Yekaterinburg'),
+('FRA','Frankfurt am Main','Frankfurt','Germany','Europe/Berlin'), ('MUC','Munich','Munich','Germany','Europe/Berlin'),
+('BER','Berlin Brandenburg','Berlin','Germany','Europe/Berlin'), ('DUS','Dusseldorf','Dusseldorf','Germany','Europe/Berlin'),
+('HAM','Hamburg','Hamburg','Germany','Europe/Berlin'), ('LHR','Heathrow','London','United Kingdom','Europe/London'),
+('LGW','Gatwick','London','United Kingdom','Europe/London'), ('STN','Stansted','London','United Kingdom','Europe/London'),
+('MAN','Manchester','Manchester','United Kingdom','Europe/London'), ('EDI','Edinburgh','Edinburgh','United Kingdom','Europe/London'),
+('CDG','Charles de Gaulle','Paris','France','Europe/Paris'), ('ORY','Orly','Paris','France','Europe/Paris'),
+('NCE','Nice Cote d''Azur','Nice','France','Europe/Paris'), ('LYS','Lyon Saint-Exupery','Lyon','France','Europe/Paris'),
+('AMS','Schiphol','Amsterdam','Netherlands','Europe/Amsterdam'), ('RTM','Rotterdam The Hague','Rotterdam','Netherlands','Europe/Amsterdam'),
+('BRU','Brussels','Brussels','Belgium','Europe/Brussels'), ('ZRH','Zurich','Zurich','Switzerland','Europe/Zurich'),
+('GVA','Geneva','Geneva','Switzerland','Europe/Zurich'), ('VIE','Vienna','Vienna','Austria','Europe/Vienna'),
+('MAD','Barajas','Madrid','Spain','Europe/Madrid'), ('BCN','El Prat','Barcelona','Spain','Europe/Madrid'),
+('PMI','Palma de Mallorca','Palma','Spain','Europe/Madrid'), ('AGP','Malaga','Malaga','Spain','Europe/Madrid'),
+('LIS','Humberto Delgado','Lisbon','Portugal','Europe/Lisbon'), ('OPO','Francisco Sa Carneiro','Porto','Portugal','Europe/Lisbon'),
+('FCO','Fiumicino','Rome','Italy','Europe/Rome'), ('MXP','Malpensa','Milan','Italy','Europe/Rome'),
+('VCE','Marco Polo','Venice','Italy','Europe/Rome'), ('NAP','Capodichino','Naples','Italy','Europe/Rome'),
+('ATH','Eleftherios Venizelos','Athens','Greece','Europe/Athens'), ('SKG','Makedonia','Thessaloniki','Greece','Europe/Athens'),
+('IST','Istanbul','Istanbul','Turkey','Europe/Istanbul'), ('SAW','Sabiha Gokcen','Istanbul','Turkey','Europe/Istanbul'),
+('AYT','Antalya','Antalya','Turkey','Europe/Istanbul'), ('ESB','Esenboga','Ankara','Turkey','Europe/Istanbul'),
+('DUB','Dublin','Dublin','Ireland','Europe/Dublin'), ('CPH','Kastrup','Copenhagen','Denmark','Europe/Copenhagen'),
+('ARN','Arlanda','Stockholm','Sweden','Europe/Stockholm'), ('OSL','Gardermoen','Oslo','Norway','Europe/Oslo'),
+('HEL','Vantaa','Helsinki','Finland','Europe/Helsinki'), ('WAW','Chopin','Warsaw','Poland','Europe/Warsaw'),
+('KRK','John Paul II','Krakow','Poland','Europe/Warsaw'), ('PRG','Vaclav Havel','Prague','Czechia','Europe/Prague'),
+('BUD','Ferenc Liszt','Budapest','Hungary','Europe/Budapest'), ('RIX','Riga','Riga','Latvia','Europe/Riga'),
+('TLL','Lennart Meri','Tallinn','Estonia','Europe/Tallinn'), ('VNO','Vilnius','Vilnius','Lithuania','Europe/Vilnius'),
+('KEF','Keflavik','Reykjavik','Iceland','Atlantic/Reykjavik'), ('JFK','John F. Kennedy','New York','United States','America/New_York'),
+('EWR','Newark Liberty','Newark','United States','America/New_York'), ('LGA','LaGuardia','New York','United States','America/New_York'),
+('BOS','Logan','Boston','United States','America/New_York'), ('IAD','Dulles','Washington','United States','America/New_York'),
+('ATL','Hartsfield-Jackson','Atlanta','United States','America/New_York'), ('MIA','Miami','Miami','United States','America/New_York'),
+('ORD','O''Hare','Chicago','United States','America/Chicago'), ('DFW','Dallas/Fort Worth','Dallas','United States','America/Chicago'),
+('IAH','George Bush','Houston','United States','America/Chicago'), ('DEN','Denver','Denver','United States','America/Denver'),
+('LAX','Los Angeles','Los Angeles','United States','America/Los_Angeles'), ('SFO','San Francisco','San Francisco','United States','America/Los_Angeles'),
+('SEA','Seattle-Tacoma','Seattle','United States','America/Los_Angeles'), ('LAS','Harry Reid','Las Vegas','United States','America/Los_Angeles'),
+('PHX','Sky Harbor','Phoenix','United States','America/Phoenix'), ('YYZ','Pearson','Toronto','Canada','America/Toronto'),
+('YVR','Vancouver','Vancouver','Canada','America/Vancouver'), ('YUL','Trudeau','Montreal','Canada','America/Toronto'),
+('MEX','Benito Juarez','Mexico City','Mexico','America/Mexico_City'), ('CUN','Cancun','Cancun','Mexico','America/Cancun'),
+('GRU','Guarulhos','Sao Paulo','Brazil','America/Sao_Paulo'), ('GIG','Galeao','Rio de Janeiro','Brazil','America/Sao_Paulo'),
+('EZE','Ezeiza','Buenos Aires','Argentina','America/Argentina/Buenos_Aires'), ('SCL','Arturo Merino Benitez','Santiago','Chile','America/Santiago'),
+('BOG','El Dorado','Bogota','Colombia','America/Bogota'), ('LIM','Jorge Chavez','Lima','Peru','America/Lima'),
+('DXB','Dubai International','Dubai','United Arab Emirates','Asia/Dubai'), ('AUH','Zayed International','Abu Dhabi','United Arab Emirates','Asia/Dubai'),
+('DOH','Hamad International','Doha','Qatar','Asia/Qatar'), ('RUH','King Khalid','Riyadh','Saudi Arabia','Asia/Riyadh'),
+('JED','King Abdulaziz','Jeddah','Saudi Arabia','Asia/Riyadh'), ('TLV','Ben Gurion','Tel Aviv','Israel','Asia/Jerusalem'),
+('CAI','Cairo International','Cairo','Egypt','Africa/Cairo'), ('JNB','O.R. Tambo','Johannesburg','South Africa','Africa/Johannesburg'),
+('CPT','Cape Town','Cape Town','South Africa','Africa/Johannesburg'), ('NBO','Jomo Kenyatta','Nairobi','Kenya','Africa/Nairobi'),
+('DEL','Indira Gandhi','Delhi','India','Asia/Kolkata'), ('BOM','Chhatrapati Shivaji','Mumbai','India','Asia/Kolkata'),
+('BKK','Suvarnabhumi','Bangkok','Thailand','Asia/Bangkok'), ('SIN','Changi','Singapore','Singapore','Asia/Singapore');
+
+-- =========================================================
+-- 3. PASSENGERS
+-- =========================================================
+INSERT INTO passengers (first_name, last_name, passport, phone, email, birthday) VALUES
+('Ivan','Petrov','RU1000001','+79001110001','ivan.petrov@example.com','1985-04-12'),
+('Maria','Ivanova','RU1000002','+79001110002','maria.ivanova@example.com','1990-07-23'),
+('Sergey','Smirnov','RU1000003','+79001110003','sergey.smirnov@example.com','1978-11-02'),
+('Anna','Kuznetsova','RU1000004','+79001110004','anna.kuznetsova@example.com','1995-02-17'),
+('Dmitry','Popov','RU1000005','+79001110005','dmitry.popov@example.com','1982-09-30'),
+('Elena','Sokolova','RU1000006','+79001110006','elena.sokolova@example.com','1993-06-08'),
+('Alexey','Lebedev','RU1000007','+79001110007','alexey.lebedev@example.com','1975-12-19'),
+('Olga','Kozlova','RU1000008','+79001110008','olga.kozlova@example.com','1988-03-25'),
+('Nikolay','Novikov','RU1000009','+79001110009','nikolay.novikov@example.com','1991-08-14'),
+('Tatiana','Morozova','RU1000010','+79001110010','tatiana.morozova@example.com','1987-05-21'),
+('John','Smith','US1000011','+12025550111','john.smith@example.com','1980-01-15'),
+('Emily','Johnson','US1000012','+12025550112','emily.johnson@example.com','1992-10-03'),
+('Michael','Brown','US1000013','+12025550113','michael.brown@example.com','1976-07-28'),
+('Sarah','Davis','US1000014','+12025550114','sarah.davis@example.com','1989-11-11'),
+('David','Wilson','US1000015','+12025550115','david.wilson@example.com','1983-02-04'),
+('Jessica','Miller','US1000016','+12025550116','jessica.miller@example.com','1994-09-19'),
+('James','Moore','US1000017','+12025550117','james.moore@example.com','1971-04-30'),
+('Ashley','Taylor','US1000018','+12025550118','ashley.taylor@example.com','1996-12-07'),
+('Robert','Anderson','US1000019','+12025550119','robert.anderson@example.com','1968-06-22'),
+('Jennifer','Thomas','US1000020','+12025550120','jennifer.thomas@example.com','1990-03-09'),
+('Hans','Mueller','DE1000021','+4915110000021','hans.mueller@example.com','1979-05-17'),
+('Julia','Schmidt','DE1000022','+4915110000022','julia.schmidt@example.com','1986-08-29'),
+('Peter','Fischer','DE1000023','+4915110000023','peter.fischer@example.com','1981-01-12'),
+('Laura','Weber','DE1000024','+4915110000024','laura.weber@example.com','1993-04-06'),
+('Thomas','Meyer','DE1000025','+4915110000025','thomas.meyer@example.com','1974-10-24'),
+('Claire','Dubois','FR1000026','+33611000026','claire.dubois@example.com','1988-07-15'),
+('Pierre','Martin','FR1000027','+33611000027','pierre.martin@example.com','1982-12-01'),
+('Sophie','Bernard','FR1000028','+33611000028','sophie.bernard@example.com','1995-06-18'),
+('Luc','Moreau','FR1000029','+33611000029','luc.moreau@example.com','1977-03-27'),
+('Camille','Laurent','FR1000030','+33611000030','camille.laurent@example.com','1991-09-09'),
+('Oliver','Bennett','GB1000031','+447700900031','oliver.bennett@example.com','1984-02-20'),
+('Emma','Clarke','GB1000032','+447700900032','emma.clarke@example.com','1990-11-05'),
+('Harry','Walker','GB1000033','+447700900033','harry.walker@example.com','1979-08-13'),
+('Charlotte','Hall','GB1000034','+447700900034','charlotte.hall@example.com','1996-01-29'),
+('George','Young','GB1000035','+447700900035','george.young@example.com','1973-05-08'),
+('Marco','Rossi','IT1000036','+393310000036','marco.rossi@example.com','1986-04-03'),
+('Giulia','Ferrari','IT1000037','+393310000037','giulia.ferrari@example.com','1992-10-26'),
+('Luca','Esposito','IT1000038','+393310000038','luca.esposito@example.com','1980-07-07'),
+('Chiara','Bianchi','IT1000039','+393310000039','chiara.bianchi@example.com','1994-03-14'),
+('Alessandro','Romano','IT1000040','+393310000040','alessandro.romano@example.com','1975-12-30'),
+('Carlos','Garcia','ES1000041','+34611000041','carlos.garcia@example.com','1983-09-16'),
+('Lucia','Martinez','ES1000042','+34611000042','lucia.martinez@example.com','1991-02-08'),
+('Javier','Lopez','ES1000043','+34611000043','javier.lopez@example.com','1978-06-11'),
+('Marta','Sanchez','ES1000044','+34611000044','marta.sanchez@example.com','1997-04-22'),
+('Pablo','Gomez','ES1000045','+34611000045','pablo.gomez@example.com','1970-11-13'),
+('Anna','Nowak','PL1000046','+48601000046','anna.nowak@example.com','1987-01-24'),
+('Piotr','Kowalski','PL1000047','+48601000047','piotr.kowalski@example.com','1981-08-05'),
+('Katarzyna','Wisniewska','PL1000048','+48601000048','katarzyna.wisniewska@example.com','1993-12-17'),
+('Michal','Lewandowski','PL1000049','+48601000049','michal.lewandowski@example.com','1985-05-30'),
+('Agnieszka','Zielinska','PL1000050','+48601000050','agnieszka.zielinska@example.com','1979-10-09'),
+('Yuki','Tanaka','JP1000051','+819010000051','yuki.tanaka@example.com','1990-03-03'),
+('Haruto','Suzuki','JP1000052','+819010000052','haruto.suzuki@example.com','1984-07-19'),
+('Sakura','Sato','JP1000053','+819010000053','sakura.sato@example.com','1996-11-27'),
+('Ren','Takahashi','JP1000054','+819010000054','ren.takahashi@example.com','1972-02-14'),
+('Aoi','Watanabe','JP1000055','+819010000055','aoi.watanabe@example.com','1998-06-06'),
+('Wei','Chen','CN1000056','+8613010000056','wei.chen@example.com','1982-05-12'),
+('Fang','Li','CN1000057','+8613010000057','fang.li@example.com','1988-09-21'),
+('Jing','Wang','CN1000058','+8613010000058','jing.wang@example.com','1994-01-08'),
+('Hao','Zhang','CN1000059','+8613010000059','hao.zhang@example.com','1976-04-15'),
+('Mei','Liu','CN1000060','+8613010000060','mei.liu@example.com','1991-12-25'),
+('Minjun','Kim','KR1000061','+821010000061','minjun.kim@example.com','1985-08-02'),
+('Seoyeon','Park','KR1000062','+821010000062','seoyeon.park@example.com','1993-03-19'),
+('Jihoon','Lee','KR1000063','+821010000063','jihoon.lee@example.com','1980-10-31'),
+('Haeun','Choi','KR1000064','+821010000064','haeun.choi@example.com','1997-07-04'),
+('Sungmin','Jung','KR1000065','+821010000065','sungmin.jung@example.com','1974-01-26'),
+('Ahmed','Al-Farsi','AE1000066','+971501000066','ahmed.alfarsi@example.com','1986-06-14'),
+('Fatima','Al-Mansoori','AE1000067','+971501000067','fatima.almansoori@example.com','1992-09-07'),
+('Omar','Haddad','AE1000068','+971501000068','omar.haddad@example.com','1983-12-03'),
+('Layla','Nasser','AE1000069','+971501000069','layla.nasser@example.com','1995-05-23'),
+('Youssef','Karim','AE1000070','+971501000070','youssef.karim@example.com','1978-02-11'),
+('Priya','Sharma','IN1000071','+919810000071','priya.sharma@example.com','1990-08-18'),
+('Rahul','Verma','IN1000072','+919810000072','rahul.verma@example.com','1987-04-09'),
+('Ananya','Iyer','IN1000073','+919810000073','ananya.iyer@example.com','1996-10-16'),
+('Vikram','Singh','IN1000074','+919810000074','vikram.singh@example.com','1979-01-02'),
+('Neha','Gupta','IN1000075','+919810000075','neha.gupta@example.com','1993-11-29'),
+('Lucas','Silva','BR1000076','+551190000076','lucas.silva@example.com','1988-03-08'),
+('Beatriz','Santos','BR1000077','+551190000077','beatriz.santos@example.com','1994-07-25'),
+('Rafael','Oliveira','BR1000078','+551190000078','rafael.oliveira@example.com','1981-12-12'),
+('Camila','Costa','BR1000079','+551190000079','camila.costa@example.com','1997-02-27'),
+('Thiago','Pereira','BR1000080','+551190000080','thiago.pereira@example.com','1976-09-05'),
+('Liam','O''Connor','IE1000081','+353851000081','liam.oconnor@example.com','1985-07-11'),
+('Aoife','Murphy','IE1000082','+353851000082','aoife.murphy@example.com','1991-01-18'),
+('Sean','Kelly','IE1000083','+353851000083','sean.kelly@example.com','1977-05-29'),
+('Niamh','Byrne','IE1000084','+353851000084','niamh.byrne@example.com','1995-08-23'),
+('Conor','Ryan','IE1000085','+353851000085','conor.ryan@example.com','1982-11-04'),
+('Erik','Johansson','SE1000086','+467010000086','erik.johansson@example.com','1989-06-20'),
+('Anna','Lindberg','SE1000087','+467010000087','anna.lindberg@example.com','1993-10-13'),
+('Lars','Nilsson','SE1000088','+467010000088','lars.nilsson@example.com','1971-03-31'),
+('Elin','Karlsson','SE1000089','+467010000089','elin.karlsson@example.com','1998-09-08'),
+('Gustav','Eriksson','SE1000090','+467010000090','gustav.eriksson@example.com','1984-12-15'),
+('Mehmet','Yilmaz','TR1000091','+905321000091','mehmet.yilmaz@example.com','1986-02-22'),
+('Ayse','Demir','TR1000092','+905321000092','ayse.demir@example.com','1992-06-30'),
+('Mustafa','Kaya','TR1000093','+905321000093','mustafa.kaya@example.com','1980-09-12'),
+('Zeynep','Sahin','TR1000094','+905321000094','zeynep.sahin@example.com','1996-04-27'),
+('Emre','Celik','TR1000095','+905321000095','emre.celik@example.com','1978-08-06'),
+('Sipho','Nkosi','ZA1000096','+278210000096','sipho.nkosi@example.com','1987-05-19'),
+('Thandi','Dlamini','ZA1000097','+278210000097','thandi.dlamini@example.com','1993-01-07'),
+('Daniel','Cohen','IL1000098','+972521000098','daniel.cohen@example.com','1984-10-21'),
+('Noa','Levi','IL1000099','+972521000099','noa.levi@example.com','1995-03-16'),
+('Ahmed','Hassan','EG1000100','+201001000100','ahmed.hassan@example.com','1988-11-30');
+
+-- =========================================================
+-- 4. CREW
+-- =========================================================
+INSERT INTO crew (first_name, last_name, role) VALUES
+('Alexander','Volkov','pilot'), ('Dmitry','Orlov','pilot'), ('Igor','Zaytsev','pilot'),
+('Pavel','Morozov','pilot'), ('Andrey','Belov','pilot'), ('Vladislav','Karpov','pilot'),
+('Roman','Titov','pilot'), ('Kirill','Fomin','pilot'), ('Maxim','Zhukov','pilot'),
+('Anton','Baranov','pilot'), ('James','Carter','pilot'), ('Daniel','Hughes','pilot'),
+('Mark','Foster','pilot'), ('Paul','Reynolds','pilot'), ('Simon','Bailey','pilot'),
+('Hans','Becker','pilot'), ('Klaus','Wagner','pilot'), ('Martin','Hoffmann','pilot'),
+('Peter','Schulz','pilot'), ('Thomas','Koenig','pilot'), ('Pierre','Leroy','pilot'),
+('Jean','Roux','pilot'), ('Michel','Fournier','pilot'), ('Antoine','Girard','pilot'),
+('Olivier','Mercier','pilot'), ('Marco','Conti','pilot'), ('Luigi','Greco','pilot'),
+('Paolo','Ricci','pilot'), ('Giovanni','Marino','pilot'), ('Stefano','Bruno','pilot'),
+('Carlos','Herrera','pilot'), ('Miguel','Torres','pilot'), ('Jose','Ramirez','pilot'),
+('Antonio','Flores','pilot'), ('Rafael','Ortiz','pilot'), ('Yuki','Nakamura','pilot'),
+('Kenji','Ito','pilot'), ('Wei','Zhao','pilot'), ('Jin','Park','pilot'),
+('Ahmed','Farouk','pilot'), ('Sergey','Antonov','co-pilot'), ('Nikolay','Vasiliev','co-pilot'),
+('Artem','Sokolov','co-pilot'), ('Denis','Kiselev','co-pilot'), ('Oleg','Petrov','co-pilot'),
+('Robert','Shaw','co-pilot'), ('William','Hayes','co-pilot'), ('Andrew','Brooks','co-pilot'),
+('Steven','Ward','co-pilot'), ('Brian','Cooper','co-pilot'), ('Lukas','Bauer','co-pilot'),
+('Felix','Richter','co-pilot'), ('Jonas','Neumann','co-pilot'), ('Sebastian','Wolf','co-pilot'),
+('Mathis','Klein','co-pilot'), ('Hugo','Blanc','co-pilot'), ('Louis','Faure','co-pilot'),
+('Nathan','Chevalier','co-pilot'), ('Julien','Robin','co-pilot'), ('Adrien','Gauthier','co-pilot'),
+('Matteo','De Luca','co-pilot'), ('Andrea','Moretti','co-pilot'), ('Davide','Fontana','co-pilot'),
+('Simone','Caruso','co-pilot'), ('Federico','Gallo','co-pilot'), ('Sergio','Mendez','co-pilot'),
+('Diego','Vargas','co-pilot'), ('Andres','Rojas','co-pilot'), ('Fernando','Castro','co-pilot'),
+('Jorge','Pena','co-pilot'), ('Olga','Ivanova','flight_attendant'), ('Natalia','Petrova','flight_attendant'),
+('Ekaterina','Smirnova','flight_attendant'), ('Irina','Volkova','flight_attendant'), ('Svetlana','Lebedeva','flight_attendant'),
+('Alena','Novikova','flight_attendant'), ('Julia','Fischer','flight_attendant'), ('Laura','Schmitt','flight_attendant'),
+('Marie','Weiss','flight_attendant'), ('Sophie','Lange','flight_attendant'), ('Clara','Petit','flight_attendant'),
+('Emma','Rousseau','flight_attendant'), ('Chiara','Russo','flight_attendant'), ('Valentina','Costa','flight_attendant'),
+('Sara','Ricci','flight_attendant'), ('Elena','Rossi','flight_attendant'), ('Marta','Diaz','flight_attendant'),
+('Paula','Romero','flight_attendant'), ('Lucia','Navarro','flight_attendant'), ('Isabel','Torres','flight_attendant'),
+('Yuna','Choi','flight_attendant'), ('Hana','Mori','flight_attendant'), ('Lin','Zhang','flight_attendant'),
+('Xiaoyan','Sun','flight_attendant'), ('Amira','Saleh','flight_attendant'), ('Nadia','Karim','flight_attendant'),
+('Rachel','Green','flight_attendant'), ('Monica','Bell','flight_attendant'), ('Phoebe','Stone','flight_attendant'),
+('Diana','Prince','flight_attendant');
+
+-- =========================================================
+-- 5. AIRCRAFT
+-- =========================================================
+INSERT INTO aircraft (airline, model, tail_number, seats_count, status) VALUES
+(1,'Boeing 737-800','VP-B001',189,'active'), (2,'Airbus A320','VP-B002',180,'active'),
+(3,'Airbus A321','VP-B003',220,'active'), (4,'Airbus A330-300','VP-B004',295,'active'),
+(5,'Boeing 777-300ER','VP-B005',396,'active'), (6,'Boeing 787-9','VP-B006',290,'active'),
+(7,'Sukhoi SSJ-100','VP-B007',98,'active'), (8,'Airbus A220-300','VP-B008',145,'active'),
+(9,'Embraer E190','VP-B009',114,'active'), (10,'Boeing 747-400','VP-B010',400,'active'),
+(11,'Boeing 737-800','VP-B011',189,'active'), (12,'Airbus A320','VP-B012',180,'active'),
+(13,'Airbus A321','VP-B013',220,'active'), (14,'Airbus A330-300','VP-B014',295,'active'),
+(15,'Boeing 777-300ER','VP-B015',396,'active'), (16,'Boeing 787-9','VP-B016',290,'active'),
+(17,'Sukhoi SSJ-100','VP-B017',98,'active'), (18,'Airbus A220-300','VP-B018',145,'active'),
+(19,'Embraer E190','VP-B019',114,'active'), (20,'Boeing 747-400','VP-B020',400,'active'),
+(21,'Boeing 737-800','VP-B021',189,'active'), (22,'Airbus A320','VP-B022',180,'active'),
+(23,'Airbus A321','VP-B023',220,'retired'), (24,'Airbus A330-300','VP-B024',295,'active'),
+(25,'Boeing 777-300ER','VP-B025',396,'active'), (26,'Boeing 787-9','VP-B026',290,'active'),
+(27,'Sukhoi SSJ-100','VP-B027',98,'active'), (28,'Airbus A220-300','VP-B028',145,'active'),
+(29,'Embraer E190','VP-B029',114,'active'), (30,'Boeing 747-400','VP-B030',400,'maintenance'),
+(31,'Boeing 737-800','VP-B031',189,'active'), (32,'Airbus A320','VP-B032',180,'active'),
+(33,'Airbus A321','VP-B033',220,'active'), (34,'Airbus A330-300','VP-B034',295,'active'),
+(35,'Boeing 777-300ER','VP-B035',396,'active'), (36,'Boeing 787-9','VP-B036',290,'active'),
+(37,'Sukhoi SSJ-100','VP-B037',98,'active'), (38,'Airbus A220-300','VP-B038',145,'active'),
+(39,'Embraer E190','VP-B039',114,'active'), (40,'Boeing 747-400','VP-B040',400,'maintenance'),
+(41,'Boeing 737-800','VP-B041',189,'retired'), (42,'Airbus A320','VP-B042',180,'active'),
+(43,'Airbus A321','VP-B043',220,'active'), (44,'Airbus A330-300','VP-B044',295,'active'),
+(45,'Boeing 777-300ER','VP-B045',396,'active'), (46,'Boeing 787-9','VP-B046',290,'active'),
+(47,'Sukhoi SSJ-100','VP-B047',98,'active'), (48,'Airbus A220-300','VP-B048',145,'active'),
+(49,'Embraer E190','VP-B049',114,'active'), (50,'Boeing 747-400','VP-B050',400,'maintenance'),
+(51,'Boeing 737-800','VP-B051',189,'active'), (52,'Airbus A320','VP-B052',180,'active'),
+(53,'Airbus A321','VP-B053',220,'active'), (54,'Airbus A330-300','VP-B054',295,'active'),
+(55,'Boeing 777-300ER','VP-B055',396,'active'), (56,'Boeing 787-9','VP-B056',290,'active'),
+(57,'Sukhoi SSJ-100','VP-B057',98,'active'), (58,'Airbus A220-300','VP-B058',145,'active'),
+(59,'Embraer E190','VP-B059',114,'retired'), (60,'Boeing 747-400','VP-B060',400,'maintenance'),
+(61,'Boeing 737-800','VP-B061',189,'active'), (62,'Airbus A320','VP-B062',180,'active'),
+(63,'Airbus A321','VP-B063',220,'active'), (64,'Airbus A330-300','VP-B064',295,'active'),
+(65,'Boeing 777-300ER','VP-B065',396,'active'), (66,'Boeing 787-9','VP-B066',290,'active'),
+(67,'Sukhoi SSJ-100','VP-B067',98,'active'), (68,'Airbus A220-300','VP-B068',145,'active'),
+(69,'Embraer E190','VP-B069',114,'active'), (70,'Boeing 747-400','VP-B070',400,'maintenance'),
+(71,'Boeing 737-800','VP-B071',189,'active'), (72,'Airbus A320','VP-B072',180,'active'),
+(73,'Airbus A321','VP-B073',220,'active'), (74,'Airbus A330-300','VP-B074',295,'active'),
+(75,'Boeing 777-300ER','VP-B075',396,'active'), (76,'Boeing 787-9','VP-B076',290,'active'),
+(77,'Sukhoi SSJ-100','VP-B077',98,'retired'), (78,'Airbus A220-300','VP-B078',145,'active'),
+(79,'Embraer E190','VP-B079',114,'active'), (80,'Boeing 747-400','VP-B080',400,'maintenance'),
+(81,'Boeing 737-800','VP-B081',189,'active'), (82,'Airbus A320','VP-B082',180,'active'),
+(83,'Airbus A321','VP-B083',220,'active'), (84,'Airbus A330-300','VP-B084',295,'active'),
+(85,'Boeing 777-300ER','VP-B085',396,'active'), (86,'Boeing 787-9','VP-B086',290,'active'),
+(87,'Sukhoi SSJ-100','VP-B087',98,'active'), (88,'Airbus A220-300','VP-B088',145,'active'),
+(89,'Embraer E190','VP-B089',114,'active'), (90,'Boeing 747-400','VP-B090',400,'maintenance'),
+(91,'Boeing 737-800','VP-B091',189,'active'), (92,'Airbus A320','VP-B092',180,'active'),
+(93,'Airbus A321','VP-B093',220,'active'), (94,'Airbus A330-300','VP-B094',295,'active'),
+(95,'Boeing 777-300ER','VP-B095',396,'retired'), (96,'Boeing 787-9','VP-B096',290,'active'),
+(97,'Sukhoi SSJ-100','VP-B097',98,'active'), (98,'Airbus A220-300','VP-B098',145,'active'),
+(99,'Embraer E190','VP-B099',114,'active'), (100,'Boeing 747-400','VP-B100',400,'maintenance');
+
+-- =========================================================
+-- 6. SEATS
+-- =========================================================
+INSERT INTO seats (aircraft, number, type)
+SELECT ((s.i - 1) / 5) + 1,
+       CASE (s.i - 1) % 5 WHEN 0 THEN '1A' WHEN 1 THEN '1B' WHEN 2 THEN '1C' WHEN 3 THEN '2A' ELSE '2B' END,
+       CASE (s.i - 1) % 5 WHEN 0 THEN 'window' WHEN 1 THEN 'middle' WHEN 2 THEN 'aisle' WHEN 3 THEN 'window' ELSE 'middle' END
+FROM generate_series(1, 100) AS s(i);
+
+-- =========================================================
+-- 7. FLIGHTS
+-- =========================================================
+INSERT INTO flights (number, airline, aircraft, from_airport, to_airport, departure, arrival, status)
+SELECT trim(a.iata_code) || (100 + s.i),
+       ((s.i - 1) % 20) + 1, ((s.i - 1) % 20) + 1,
+       ((s.i - 1) % 100) + 1, ((s.i + 49) % 100) + 1,
+       TIMESTAMP '2026-03-01 06:00:00' + INTERVAL '3 hours' * (s.i - 1),
+       TIMESTAMP '2026-03-01 08:30:00' + INTERVAL '3 hours' * (s.i - 1),
+       CASE WHEN s.i <= 40 THEN 'arrived' WHEN s.i <= 70 THEN 'departed' ELSE 'scheduled' END
+FROM generate_series(1, 100) AS s(i)
+JOIN airlines a ON a.id = ((s.i - 1) % 20) + 1;
+
+-- =========================================================
+-- 8. CREW_ASSIGNMENTS
+-- =========================================================
+INSERT INTO crew_assignments (flight, crew_member)
+SELECT s.i, s.i FROM generate_series(1, 100) AS s(i);
+
+-- =========================================================
+-- 9. TICKETS
+-- =========================================================
+INSERT INTO tickets (passenger, flight, seat, price, status)
+SELECT s.i, s.i, ((s.i - 1) % 20) * 5 + ((s.i - 1) / 20) + 1,
+       (100 + (s.i * 37) % 500)::float8,
+       CASE WHEN s.i % 7 = 0 THEN 'used' WHEN s.i % 5 = 0 THEN 'issued' WHEN s.i % 3 = 0 THEN 'paid' ELSE 'booked' END
+FROM generate_series(1, 100) AS s(i);
+
+-- =========================================================
+-- 10. PAYMENTS
+-- =========================================================
+INSERT INTO payments (ticket, amount, date, method, status)
+SELECT s.i, t.price,
+       TIMESTAMP '2026-02-01 10:00:00' + INTERVAL '6 hours' * (s.i - 1),
+       CASE WHEN s.i % 2 = 0 THEN 'card' ELSE 'cash' END,
+       CASE WHEN s.i % 13 = 0 THEN 'failed' ELSE 'completed' END
+FROM generate_series(1, 100) AS s(i)
+JOIN tickets t ON t.id = s.i;
